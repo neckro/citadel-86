@@ -1,0 +1,36 @@
+ BASIC OPTIONS for .Read:
+
+  <F>orward [date-spec | <last x days>]
+  <N>ew messages [date-spec | <last x days>]
+  <O>ld messages [date-spec | <last x days>]
+  <R>everse retrieval [date-spec | <last x days>]
+
+ FEEPS (place BEFORE the BASIC OPTIONS):
+
+  <S>tatus of Citadel-86 system
+
+  <X>modem protocol
+  <Y>modem protocol
+  <W>xmodem protocol
+
+  <U>ser                        <search for a user's messages>
+  <P>hrase                      <search for specified phrase>
+  <L>ocal-only messages         <shared rooms only>
+  <G>lobal                      <all room read>
+
+ FILE OPTIONS (see .HELP FILES):
+
+  <X>modem protocol
+  <Y>modem protocol
+  <W>xmodem protocol
+  <Z>modem protocol
+
+  <B>inary file printout
+  <D>irectory of files in room
+  <E>xtended-directory of files in room
+  <T>extfile printout <C/R>     -- unformatted
+  <T>extfile printout <F>ormatted
+
+  <P>hrase                      -- searches file comments for the given phrase
+                                -- for processing when used with the above
+                                -- directory commands.

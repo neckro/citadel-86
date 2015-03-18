@@ -1,0 +1,660 @@
+
+                                ctdlCnfg.sys
+
+
+        This is the configuration file for the Citadel-86 bulletin board
+     system. It is read in by confg.exe which sets up a "ctdlTabl.sys" file
+     recording the configuration parameters.  (CtdlTabl.sys is read by the
+     other Citadel programs.) This file must be edited to be appropriate to
+     the local environment. Lines not beginning with "#" are ignored by CONFG
+     and may be deleted once the file is successfully configured -- they are
+     purely documentary.  For more detail, consult the CITADEL-86 SYSOP MANUAL
+     (Install3.Man).
+ 
+     GENERAL STRING FORMATTING CONTROLS:
+     The following are supported:
+             "\n": CR-LF
+             "\t": Tab character
+             "\b": Non-destructive Backspace
+             "\r": CR
+             "\f": Formfeed
+             "\"": '"'
+             "\\": Backslash
+             "\<xxx>": The octal* ASCII value is output
+
+        SECTION 1: NECESSITIES AND MISCELLANEA
+ 
+     SYSTEM TITLE
+        nodeTitle is printed after the "Welcome to" and before the "Running..."
+     lines of the banner that pops up on carrier detect, UNLESS BANNER.BLB
+     exists, in which case the entire "Welcome to <nodeTitle>" line is
+     replaced with the contents of BANNER.BLB.  nodeTitle is a string value
+     that accepts formatting directives and goes through the Citadel
+     formatter.
+
+#nodeTitle "Our Name"         -- An obvious imposter
+ 
+     SYSTEM NAME
+        nodeName is purely for networking purposes.  Messages which
+     originated on your system will have headers looking like:
+
+           82Nov23 From Cynbe ru Taren @ODD-DATA
+
+     This should be a short (for the sake of the reader!) mnemonic
+     identifying your node for humans.  It does not use formatting directives.
+ 
+#nodeName "ODD-DATA"          -- The original Citadel (kow-tow, everyone)
+ 
+     SYSTEM ID
+        nodeId is also purely for networking purposes.  Messages which
+     originate on your system will be marked with the nodeId, but it will
+     not normally be printed out.  It is primarily for the use of the
+     networking support software, and forms a globally unique name and
+     address for your system.  It consists of a country abbreviation
+     followed by area code and system phone number.  This string value does not
+     use formatting directives. Country abbreviation for the US is "US", for
+     Canada is "CA".  (For others, see COUNTRY.DOC.)
+
+
+#nodeId "US 612 470 9635"
+
+     SYSTEM BASEROOM
+        baseRoom is the homeroom of the Citadel in operation, the place you
+     go when there are no more rooms with unread messages left.  This is
+     usually known as the Lobby> on most systems.  It's simply a nice,
+     easy way to customize and give character to your system..
+ 
+#baseRoom "Glops"
+ 
+     SYSTEM BASE FLOOR
+        MainFloor is the home floor of the Citadel in operation, the floor
+     where baseRoom, Aide, and Mail are located.  It's another nice, easy
+     way to customize your system
+
+#MainFloor "Da Basement"
+
+     SYSTEM ENCRYPTION SEED
+        CRYPTSEED is a number used in encrypting the data files.  Change
+     it once when you install the system, but not thereafter -- or you
+     won't be able to read the existing files any more.
+
+#CRYPTSEED 333                --
+
+     UNLOGGED USER'S SCREEN WIDTH
+        This parameter is used to specify an unlogged user's screen width 
+     (including banner display).  If not present, defaults to 40.
+
+#UNLOGGED-WIDTH 79
+
+     DATA FILES SIZE: MESSAGE BASE
+        MESSAGEK sizes "ctdlmsg.sys", the file message text is stored in. The
+     size of this parameter together with the rate at which message text is
+     entered determines message lifetime.
+
+#MESSAGEK 300                 -- 300Kbyte ctdlmsg.sys
+
+     DATA FILES SIZE: MESSAGES PER ROOM
+        MSG-SLOTS defines the maximum number of displayable messages per room
+     on your room, except for the Mail> room.
+
+#MSG-SLOTS 58                 -- 58 is kind of traditional
+
+     DATA FILES SIZE: MESSAGES PER MAIL ROOM
+        MAIL-SLOTS defines the maximum number of displayable messages for each
+     user's Mail> room.
+
+#MAIL-SLOTS 58                -- Yet another tradition...
+
+     DATA FILES SIZE: ROOM FILE
+        MAXROOMS defines the maximum number of rooms on your system.
+
+#MAXROOMS 64                  -- This is usually enough
+
+     DATA FILES SIZE: LOG FILE
+        LOGSIZE is the number of entries that you want in your log. Once
+     you've selected a log size and have configured, you may NOT shrink
+     the log except by destroying the log totally. There is a utility
+     available for expanding the log, called DATACHNG.
+
+#LOGSIZE 180                  --
+ 
+     **DATA FILE LOCATIONS**
+        The next several parameters allow you to specify where certain system
+     files are to appear on your system.  Please note that only subdirectories
+     of the disk you specified are legal.  Disk specifications are legal.
+ 
+        This parameter specifies where you want your help files located in your
+     system.
+
+#HELPAREA "helps"             -- All help files located in subdir
+                              -- "helps"
+ 
+        This applies to the CTDLLOG.SYS file.
+
+#LOGAREA "a:log"              -- in subdir "log" on drive a:
+ 
+        This applies to the CTDLROOM.SYS, CTDLBAD.SYS, and CTDLARCH.SYS files.
+
+#ROOMAREA "system"            -- in subdir "system"
+ 
+        This applies to the CTDLMSG.SYS file.
+
+#MSGAREA ""                   -- current directory of default disk
+
+        This applies to the CTDLFLR.SYS file.
+
+#FLOORAREA "floors"           -- its own subdirectory for no particular reason.
+
+     AIDE SCOPE:
+        The AIDESEEALL parameter controls the scope that Aides have on the
+     installation.  If this parameter is set to 0, then Aides are only allowed
+     to see public rooms and private rooms that they are told about;
+     private room creation will leave an entry in the Aide> room indicating
+     that a room was created, but not the name.  An Aide at the SysConsole
+     will, however, see all rooms.  If this parameter is set to 1, then all
+     Aides will see all rooms on the system, public or private.
+ 
+#AIDESEEALL 0                 -- Aides see nothing
+ 
+     NEW USER CONTROL:
+        LOGINOK controls whether users without a password can login from
+     remote. If LOGINOK is 1, they may; if LOGINOK is 0, then the only place
+     that new accounts may be entered is from the system console.
+ 
+#LOGINOK 1                    -- user-established accounts
+
+
+     MESSAGE ENTRY CONTROL:
+        If ENTEROK is 1, callers that are not logged in may enter messages.  If
+     0, then they must login first before they can enter messages (except for
+     Mail> to the Sysop.  Note that Anonymous rooms are not an exception.
+
+#ENTEROK 0                    -- login first
+ 
+     READING CONTROL:
+        If READOK is 1, then unlogged callers can read messages.  If READOK is
+     0, then users must login before reading messages.
+ 
+#READOK 0                     -- login first
+ 
+     ROOM CREATION CONTROL:
+        If ROOMOK is 1 then regular folks can create new rooms, else only those
+     with aide privilege can do so.
+ 
+#ROOMOK 1                     -- general room-creation privileges
+ 
+     MAIL CONTROL:
+        If ALLMAIL is 1, all get privileges; 0 means only aides have the
+     privilege.
+ 
+#ALLMAIL 1                    -- Everybody can send mail
+
+     INITIAL DOOR PRIVILEGES
+        If DoorPrivs is 0, then users must ask for door privileges; otherwise, 
+     they automatically have them on initial login.
+
+#DoorPrivs 0                    -- A prudent policy; also, the default.
+
+     INITIAL FILE PRIVS
+        Use this parameter to decide if people have file download privs
+     when they first logon or if they have to request them.
+
+#FILE-PRIV-DEFAULT   1		-- yes
+
+     COMPUTER HARDWARE TYPE:
+        Setting IBM to 1 implies the system is a PClone, and to use some
+     internal routines for accessing modem.  If IBM is 0, then substitute
+     other special routines specific to the Z100 for accessing modem.
+ 
+#IBM 1                        -- IBM clone
+ 
+     COM PORT:
+        The COM parameter allows the sysop who is using an IBM to select
+     either COM1 or COM2 as the communications port. This parameter is
+     meaningless for Z-100s.
+
+#COM 1                        -- COM1 is the selection
+
+     SYSTEM BAUD RATES:
+        SYSBAUD defines the baud rates supported by this installation.  Use
+     these values to indicate what maximum baud rate your system runs at:
+
+        0 - 300 baud
+        1 - 1200
+        2 - 2400
+        3 - 4800
+        4 - 9600
+        5 - 14400
+        6 - 19200
+        7 - 38400
+        8 - 56800
+
+#SYSBAUD 1                    -- A 3/12 system.
+ 
+     MODEM INITIALIZATION:
+        modemSetup specifies what should be sent to the modem after
+     initializing the port. While Hayes/compatibles are recommended, other
+     types of modes have been successfully used with Citadel-86, such as
+     TransModems.
+
+#modemSetup "AT S0=1 M1"
+ 
+     MODEM REINITIALIZATION:
+        REINIT lets you reinitialize the modem after each call at the highest
+     baud rate the modem will recognize.  If this parameter is not present, 
+     then the modem will not be reinitialized.  Formatting directives are 
+     recognized.
+
+-#REINIT "AT"
+
+     MODEM MANAGEMENT
+        Citadel-86 normally drops DTR (for novices, on most modems this causes
+     the modem to drop carrier and disables auto-answer until DTR is brought
+     back up) when it doesn't want a caller calling in.  This typically
+     happens when the system operator logs in at the console or the system
+     is digesting messages from a network session.  You can modify this
+     behavior by defining the two strings below, and they come into action
+     only when the system operator logs in at the console (i.e., when you
+     touch ESCape).  The first string, #DISABLE-MODEM, is sent to the modem
+     when you touch the ESC, while the second, #ENABLE-MODEM, is sent when
+     you put the system back into MODEM mode.  They let you do such things
+     as take the modem off-hook (generate a busy signal) when you are using
+     the system.  One note: the system will NOT add carriage returns to these
+     strings automatically, so make sure you do!
+
+-#DISABLE-MODEM "ATH1\r"	-- This would take the modem off hook
+-#ENABLE-MODEM "ATH0\r"		-- This would put the modem on hook
+
+     PORT LOCKING
+        You can have your installation "lock" the serial port at a given
+     speed and let the modem handle details concerning buffering, etc.  On
+     some modems such as USR HSTs, etc., this can result in a measurable
+     increase in through-put; for some modems, you HAVE to do this in order
+     to use the higher speeds.  HOWEVER, you have* to know what you're doing
+     or you shouldn't do this.  This parameter has a numeric value which
+     specifies the baud rate to lock the port at, just like #SYSBAUD.  You
+     should consider using #REINIT to instruct the modem about your port
+     locking, so that everytime the modem is told to hung up it is reminded
+     about the port locking.
+
+-#LOCK-PORT  4			-- This would lock it at 9600 baud
+
+     OFFLINE MODEM COMMAND INTERCHAR DELAY
+	Some modems cannot accept high speed commands when no one is online.
+     Therefore, this parameter can be used to slow down Citadel-86 when it
+     is issuing commands to the modem.  The units is milliseconds.  Default
+     is 0.
+
+-#OFFLINE-CHAR-DELAY		-- disabled, defaults to 0
+
+     OLD VIDEO
+        As noted in INSTALL3.MAN, some systems don't like Citadel-86 video 
+     support.  If your system doesn't, enable the following parameter.  Note 
+     the lack of value after the name -- that's on purpose!
+
+-#OLDVIDEO              -- disabled.
+
+
+     SYSTEM SCREEN COLORS
+     	FOREGROUND
+     	BACKGROUND
+     	STATUS-FOREGROUND
+     	STATUS-BACKGROUND
+        These parameters allow control of the foreground and background colors 
+     of the screen, including the status bar.  See INSTALL3.MAN for a full 
+     list of supported colors.  The generic setup should cause the status bar 
+     to have black letters on a gray background, while the rest of the screen 
+     is white letters on a black background.  See the Ease utility for an
+     easy way to select colors.
+
+#FOREGROUND WHITE
+#BACKGROUND BLACK
+#STATUS-FOREGROUND BLACK
+#STATUS-BACKGROUND LIGHT GRAY
+
+     STATUS BAR CLOCK
+        Normally, the status bar has a clock which is updated each minute.  
+     You may control its behavior by using one of the values "None", "Inuse",
+     or "Always" in the #CLOCK parameter.
+
+-#CLOCK Always                     -- disabled.
+
+     BANNERS AT THE CONSOLE
+	By default, Citadel-86 displays a banner when the ESC is hit to put
+     the system in Console mode.  If you do not like this, enable the following
+     parameter.  No value is needed.
+
+-#NO-CONSOLE-BANNER		-- disabled
+
+        SECTION 2: INTERESTING OPTIONS
+ 
+     TIMED EVENT HANDLER:
+        See the manual for this one.  Here is the generic format:
+
+-#event <days> <time> <class> <type> <duration> <warning string> <depends>
+
+     REMOTE SYSOP FACILITY:
+        #sysPassword specifies the file that contains a string that will act
+     as the password to the remote sysop abilities.  If this parameter is not
+     specified, or if the file is not found, or is unreadable, then remote
+     sysop abilities are disabled.  Only Aides can access remote sysop
+     abilities, and they must* know the exact password, including the case
+     of the individual letters.
+ 
+-#sysPassword "c:\pwd"        -- Inactive (note the leading hyphen)
+ 
+     AUDIT:
+        This parameter specifies where the files CALLLOG.SYS, FILELOG.SYS, and 
+     DOORUSE.SYS end up on your system.  Note that the directory specified has
+     to be a subdirectory of a current directory.
+
+-#AUDITAREA ""                 -- put CALLLOG.SYS in the current directory
+                               -- (inactive -- note leading hyphen)
+
+     ANONYMOUS CALLERS
+        This parameter, if enabled, logs ANONYMOUS callers from remote in
+     your CALLLOG.SYS as "<No Login>".
+
+-#ANONYMOUS-SESSIONS
+
+
+     RAM DRIVE HANDLING:
+        This parameter controls whether or not and where a secondary
+     message file will reside.  If you use this parameter, it should
+     reference a permanent media file, and the MSGAREA parameter should
+     reference a RAM drive.  MSGAREA will always be both read and written to,
+     while this one will only be written to; thus, this parameter should
+     reference the media more sensitive to wear and tear.  If this parameter
+     is disabled then the mirroring will not take place.
+ 
+-#MSG2AREA ""			-- Disabled
+
+     INTERRUPTED MESSAGE AREA:
+        This parameter specifies where to save interrupted messages for
+     later completion.
+
+-#HOLDAREA "held"             -- inactive
+
+     ROOM INFORMATION
+	Room textual information (i.e., information displayed in response
+     to the <I>nformation command) is saved in a series of files in the
+     directory specified by this parameter.  If this parameter is not
+     specified then the room information commands are disabled and no files
+     of said information should be saved.  You should note that by default
+     this is active, not disabled.
+
+#INFOAREA  "info"		-- active
+
+     USER BIOGRAPHIES
+	User biographies (the <M>eet command) are saved as separate files
+     in the directory specified by this parameter.  If this parameter is
+     not specified then the biography capability of Citadel-86 is disabled,
+     which will save some file space.
+
+#BIOAREA  "bios"		-- disabled
+
+     SYSOP MAIL ROUTING:
+        This parameter specifies the account that Mail> to sysop should be
+     routed to.
+
+ -#sysopName "Me!"            -- inactive
+
+     OUTSIDE EDITOR:
+        These parameters specify what editor the Sysop may use for System 
+     Console message composition, and what area of the disk system to use for 
+     temporary files.  If the first is not present, then the <O>utside Editor 
+     is not available; if the second is not present, the current drive and 
+     directory are used for temporary files.  See OPER3.MAN and INSTALL3.MAN 
+     for full details.
+
+-#EDITOR "whatever"             -- disabled!
+-#EDIT-AREA ""                  -- ditto!
+
+     Citadel-86 as a Door:
+        This parameter lets you tell the installation that Citadel-86 is a 
+     door itself.  In this situation, the modem is not initialized, etc...
+     See OPER3.MAN Section XII for details.
+
+-#ISDOOR                        -- disabled, no value for this parameter.
+
+     CONSOLE TIMEOUT
+       If you are in the habit of forgetting to logoff when you're at the
+     console, thus effectively making the system useless until you notice
+     your indiscretion, you can use this numeric parameter to decide how
+     many SECONDS the system can be inactive while in CONSOLE mode before
+     logging the person off at the system console
+
+-#CONSOLE-TIMEOUT  600		-- this would be a 10 minute timeout period
+
+     SYSOP MAIL
+        You can archive sysop mail.  This string parameter specifies the file
+     Sysop Mail should be archived to.  This includes both Mail> to "sysop"
+     and mail to the name specified in #sysopName.
+
+-#SYSOP-ARCHIVE "sysop"		-- mail archive filename
+
+     ANONYMOUS MAIL CONTROLS
+        Anonymous mail to sysop is occasionally used to abuse systems.  This
+     numeric parameter is used to control the maximum length of anonymous
+     mail.  If an anonymous mail leaver exceeds that length, the user loses
+     carrier and the mail, instead of being placed in mail, is placed in a
+     file named ANONMAIL and a message is left in Aide informing you of this
+     fact.
+
+-#ANON-MAIL-LENGTH  300		-- anonymous folk will have to be brief
+
+     PASSWORD HACKERS
+         Village Idiots being a pain?  This numeric parameter lets you tell
+     the system to drop carrier on anyone who screws up their password X
+     times.
+
+#LOGIN-ATTEMPTS  5
+
+     PARANOID LOGIN
+	By default Citadel-86 is very friendly about login, only requesting
+     a password.  If you this parameter is set, no value required, then
+     then the user is required to give their name as well as password.
+
+-#PARANOID-LOGIN		-- disabled
+
+     MAX MESSAGES ENTERED IN A ROOM
+	If you are having problems with ruggies scrolling your rooms by
+     entering lots of messages, set this parameter.  If someone tries to
+     enter more than xx messages in a single room during a single call,
+     they'll get booted off and a record of their evil attempt will be left
+     in the calllog, if you run one.
+
+-#MAX-MSGS-ENTERED  xx		-- disabled
+
+     FREE SPACE REQUIREMENTS
+	It is bad to let users upload so much to your system that your disk(s)
+     become full.  Bad things can happen.  Therefore, you can use this parameter
+     to specify the minimum free space required on disk before an upload is
+     allowed to occur.  This parameter applies to whichever disk the directory
+     room points at, not the entire collection of disks.  The units are 'K',
+     but it is disabled by default.
+
+-#DISK-FREE	100
+
+     ARCHIVING ROOMS
+	Rooms are archived to files using a default width of 79.  If this does
+     not suit, set this parameter to the desired width.
+
+-#ARCHIVE-WIDTH	xx		- use default
+
+     BANNER COUNT
+	You can use this parameter to specify how many banners to choose from
+     for carrier connects, etc.  See the installation manual for more info.
+
+-#BANNER-COUNT 60		-- disabled
+
+     DELAY DEFAULT
+	Users can set a millisecond delay to make reading a bit more
+     comfortable.  On some high speed systems this actually is a requirement,
+     so this default is provided.  It applies to new users.
+
+-#ECD-DEFAULT	xx		-- disabled
+
+     AUTOMATIC MODERATORS
+	If you want the creator of a room to automatically be the moderator of
+     the room then set this parameter to 1.
+
+-#AUTO-MODERATORS 	x	-- disabled, 1 or 0
+
+        SECTION 3: NETWORK PARAMETERS
+
+     NETWORK SELECT:
+        You use this parameter to decide whether or not you are a networking
+     system.  If you set this parameter to 0, then the rest of the parameters
+     in this section are meaningless, because you are not a networking
+     system.
+
+#NETWORK 0                    -- Disable for novices
+
+     YOUR DOMAIN
+        What domain are we located in?  One to a customer, please.  See
+     NETWORK3.MAN for more information on domains.
+
+#nodeDomain "xx"
+
+     MAIL HUB
+        A mail hub is a system you send all domain-oriented mail to when
+     you don't know how else to get to the given domains.  This string
+     parameter is the name of a system on your primary nodelist.
+
+-#MailHub "xxxxx"		-- local backbone?  another backbone?
+
+     NEW USER NET PRIVILEGES:
+        #NewNetPrivs specifies whether or not new users automatically have
+     net privileges.
+
+#NewNetPrivs 0                -- Nope.
+
+     DOMAIN DISPLAY
+        This very optional parameter lets you customize how the domains on
+     messages from other systems are displayed.  The default is shown
+     in our example.  Note the '%s' MUST be present.
+
+#DomainDisplay " _ %s"
+
+     DOMAIN SERVING
+        You want to be a domain server?  This is how you volunteer; set this
+     parameter to tell what domain you want to serve, and see NETWORK3.MAN on
+     administrative procedures.
+
+-#ServeDomain "xx"		-- make sure you know what you're doing
+
+     NET FILES LOCATION:
+        You use this parameter to specify where the various network-related
+     files will be located.  It is a string parameter that you use to specify
+     the drive and directory to put these files.
+
+#NETAREA "c:net"              -- an example ONLY
+
+     DOMAIN FILES LOCATION
+        This parameter lets you decide where to put domain-related temporary
+     files.  We recommend you make this different from #NETAREA.
+
+#DOMAINAREA "c:domains"
+
+     RECEPTION AREA FOR FILES:
+ 
+        The NET_RECEPT_AREA parameter specifies the directory that files sent
+     to this installation Via the Send File feature of the net will be placed
+     in.  Do NOT end it with a '\'!
+
+#NET_RECEPT_AREA "C:\citadel\recept" -- Just an example
+
+     RECEPTION DIRECTORY SIZE:
+        The parameter NET_AREA_SIZE allows the sysop to specify how much room
+     should be allocated for the NET_RECEPT_AREA parameter.  This allows the
+     sysop to ensure that his system isn't swamped by files sent by other
+     systems. The NET_AREA_SIZE parameter should be in K. (Remember, this
+     should be in hex.)
+
+#NET_AREA_SIZE 500
+ 
+     INCOMING FILES SIZES:
+        The MAX_NET_FILE parameter allows the sysop to decide how large of a
+     file the system will accept from another system when the file is sent
+     by the other system (this does NOT apply to Requesting a file, only to
+     accepting a file Sent with the Send Net feature). This parameter is
+     also in K.
+
+#MAX_NET_FILE 300
+
+     MODEM DIALOUT:
+        callOutPrefix determines what is output to the modem prior to
+     the phone number to be dialed.  It must send all commands necessary
+     to put the modem into dial out mode.  Additionally, it must contain
+     what is neceessary in the way of special commands dealing with PBX's,
+     etc.
+
+        #callOutSuffix determines what is output to the modem after
+     #callOutPrefix and the phone number has been output.  Graphically,
+
+            <#callOutPrefix><phone#><#callOutSuffix>
+
+     is the sequence in which data is out when the networker tries
+     to dial out.  Since nothing is automatically appended to the
+     number when it is being output to the modem during networking,
+     the typical value for an installation using a Hayes/compatible is
+
+            #callOutSuffix "\r"
+
+     since Hayes/compatibles require a C/R to end a command string.
+
+     This may not hold true for other brands of modems.
+
+#callOutPrefix "ATDT"         -- Normal Hayes installation w/ TT.
+#callOutSuffix "\r"           -- Typical Hayes suffix
+ 
+     SPECIAL CALL OUT STRINGS
+        Sometimes, for special baud rates, you want to use a different dialout
+     string than what you're using #callOutPrefix.  These parameters can
+     be used for that.
+
+-#DialOut300 ""
+-#DialOut1200 ""
+-#DialOut2400 ""
+-#DialOut4800 ""
+-#DialOut9600 ""
+-#DialOut14400 ""
+-#DialOut19200 ""
+-#DialOut38400 ""
+-#DialOut56800 ""
+
+     SCANNING INCOME NET MESSAGES
+        Tired of profanity coming in on the net?  If this parameter is
+     enabled, then incoming net messages are scanned against BADWORDS.SYS,
+     and those failing the test are discarded with an appropriate note in
+     the Aide> room.
+
+-#SCAN-NET-MESSAGES
+
+     LONG DISTANCE CALL DELAYS
+	By default Citadel-86 will wait thirty (30) seconds during a call
+     before concluding it has failed.  This is inappropriate in some situations,
+     so this parameter can be used to lengthen it out for any call to a system
+     marked non-local.  Units is seconds.
+
+-#LD-DELAY 120		-- disabled
+
+     MAX CALLS TO A DOWN SYSTEM
+	This parameter controls how many times a system will be called
+     and achieve carrier without stabilizing during a single net session.  This
+     may help keep down the number of calls to systems that are not currently
+     functioning.  It will default to a large number.
+
+-#MAX-UNSTABLE	xx	-- disabled
+
+     ROGUE SYSTEMS
+	If you are getting calls from a system not on your node list that is
+     leaving nasty or unwanted mail for users, set this parameter.  The mail
+     will be silently discarded.  Hard to let new systems make contact with
+     you, however.
+
+-#SIEGENET		-- disabled
+
+#alldone x x                  -- end of file
+
